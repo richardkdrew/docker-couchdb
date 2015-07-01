@@ -1,4 +1,9 @@
 # DOCKER-VERSION 1.6.2
+#
+# CouchDB Dockerfile
+#
+# https://github.com/richardkdrew/docker-couchdb
+#
 
 FROM debian:jessie
 
@@ -26,9 +31,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # install CouchDB 1.6.1 & clean-up
 RUN mkdir src \
  && cd src \
- && curl -sSL http://apache.mirrors.ionfish.org/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz -O \
- && curl -sSL https://www.apache.org/dist/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz.asc -O \
- && curl -sSL https://www.apache.org/dist/couchdb/KEYS -o KEYS \
+ && curl -sSLO http://apache.mirrors.ionfish.org/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz \
+ && curl -sSLO https://www.apache.org/dist/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz.asc \
+ && curl -sSL -o KEYS https://www.apache.org/dist/couchdb/KEYS \
  && gpg --import KEYS && gpg --verify apache-couchdb-1.6.1.tar.gz.asc \
  && tar xzvf apache-couchdb-1.6.1.tar.gz \
  && cd apache-couchdb-1.6.1 \
@@ -40,8 +45,8 @@ RUN mkdir src \
 
 # grab gosu for easy step-down from root
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
-RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
-	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
+RUN curl -sSL -o /usr/local/bin/gosu  "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
+	&& curl -sSL -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
 	&& gpg --verify /usr/local/bin/gosu.asc \
 	&& rm /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu
